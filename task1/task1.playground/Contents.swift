@@ -24,14 +24,14 @@ let free = Price.Free
 let fifteenBucks = Price.ActualPrice(15.23)
 
 //----------
-protocol onlineAvailable {
-    var price: Price { get set }
-    var downloadLink: String { get set }
+protocol OnlineAvailable: CustomStringConvertible {
+    var price: Price? { get set }
+    var downloadLink: String? { get set }
 }
 
 //----------
 enum Genre: String, CustomStringConvertible {
-    case Biography, Detective, Documentary, Drama, Educational, Fantasy, Horror, Novel, Poetry, Scifi, Western
+    case Biography, Detective, Documentary, Drama, Educational, Fantasy, Horror, Novel, Poetry, Scifi, Western, Other
     
     var description: String {
         return self.rawValue.lowercaseString
@@ -42,13 +42,13 @@ let dramaGenre = Genre.Drama
 print(dramaGenre)
 
 //----------
-struct Book: onlineAvailable, CustomStringConvertible {
+struct Book: OnlineAvailable, CustomStringConvertible {
     let title: String
     let author: String
     let genre: Genre
     
-    var price: Price
-    var downloadLink: String
+    var price: Price?
+    var downloadLink: String?
     
     var description: String {
         return "\"\(title)\"" + " written by " + author
@@ -88,7 +88,6 @@ var myLibrary = personalLibrary(ownerName: "Roman Anufriev", books: myBooks)
 print(myLibrary)
 print("The \(myLibrary.books[1].genre) book I am currently reading is \(myLibrary.books[1])")
 print("Apple did a great job making this book downloadable for \(myLibrary.books[1].price) on \(myLibrary.books[1].downloadLink).")
-
 
 
 
