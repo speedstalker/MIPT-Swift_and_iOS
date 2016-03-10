@@ -103,9 +103,6 @@ var arrOfInts = Int.makeArrayOfRandomInstances(5)
 //----------
 // Float
 //----------
-var tmp: Float = -Float.infinity
-var tmp2 = Double(tmp)
-
 extension Float: RandomInstanceProtocol {
     
     static var lowerBound: Float = Float(Int.min) {
@@ -162,11 +159,87 @@ testFloat = Float.randomInstance()
 
 var arrOfFloats = Float.makeArrayOfRandomInstances(5)
 
+//---------------
+// Character
+//---------------
+extension Character: RandomInstanceProtocol {
+    static func randomInstance() -> Character {
+        var decValue = 0  // ascii decimal value of a character
+        let charType = Int(arc4random_uniform(4))
+        
+        switch charType {
+        case 1:  // digit: random Int between 48 and 57
+            decValue = Int(arc4random_uniform(10)) + 48
+        case 2:  // uppercase letter
+            decValue = Int(arc4random_uniform(26)) + 65
+        case 3:  // lowercase letter
+            decValue = Int(arc4random_uniform(26)) + 97
+        default:  // space character
+            decValue = 32
+        }
+        // get ASCII character from random decimal value
+        return Character(UnicodeScalar(decValue))
+    }
+}
 
+var testChar = Character.randomInstance()
+testChar = Character.randomInstance()
+testChar = Character.randomInstance()
+testChar = Character.randomInstance()
+testChar = Character.randomInstance()
 
+var arrOfChars = Character.makeArrayOfRandomInstances(10)
 
+//---------------
+// String
+//---------------
+extension String: RandomInstanceProtocol {
+    static var length = 15 {
+        willSet {
+            if (newValue < 0) || (newValue > Int.max) { assertionFailure("\(length) is out of range") }
+        }
+    }
+    
+    static func randomInstance() -> String {
+        var text = ""
+        for _ in 1...length {
+            var decValue = 0  // ascii decimal value of a character
+            let charType =  Int(arc4random_uniform(4))
 
+            switch charType {
+            case 1:  // digit: random Int between 48 and 57
+                decValue = Int(arc4random_uniform(10)) + 48
+            case 2:  // uppercase letter
+                decValue = Int(arc4random_uniform(26)) + 65
+            case 3:  // lowercase letter
+                decValue = Int(arc4random_uniform(26)) + 97
+            default:  // space character
+                decValue = 32
+            }
+            // get ASCII character from random decimal value
+            let char = String(UnicodeScalar(decValue))
+            text = text + char
+            // remove double spaces
+            // text = text.stringByReplacingOccurrencesOfString("  ", withString: " ")
+        }
+        return text
+    }
+    
+    static func randomInstanceWithCustomLength(customLength: Int) -> String {
+        let oldLength = String.length
+        String.length = customLength
+        
+        let rand = randomInstance()
+        
+        String.length = oldLength
+        return rand
+    }
+}
 
+var testStr = String.randomInstance()
+testStr = String.randomInstance()
+
+var testStr2 = String.randomInstanceWithCustomLength(100)
 
 
 
