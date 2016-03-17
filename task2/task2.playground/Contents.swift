@@ -162,6 +162,8 @@ var arrOfFloats = Float.makeArrayOfRandomInstances(5)
 //---------------
 // Character
 //---------------
+
+// was adopted from: https://medium.com/@skreutzb/random-swift-part-2-872276490de7#.u2bblr4rv
 extension Character: RandomInstanceProtocol {
     static func randomInstance() -> Character {
         var decValue = 0  // ascii decimal value of a character
@@ -203,24 +205,8 @@ extension String: RandomInstanceProtocol {
     static func randomInstance() -> String {
         var text = ""
         for _ in 1...length {
-            var decValue = 0  // ascii decimal value of a character
-            let charType =  Int(arc4random_uniform(4))
-
-            switch charType {
-            case 1:  // digit: random Int between 48 and 57
-                decValue = Int(arc4random_uniform(10)) + 48
-            case 2:  // uppercase letter
-                decValue = Int(arc4random_uniform(26)) + 65
-            case 3:  // lowercase letter
-                decValue = Int(arc4random_uniform(26)) + 97
-            default:  // space character
-                decValue = 32
-            }
-            // get ASCII character from random decimal value
-            let char = String(UnicodeScalar(decValue))
-            text = text + char
-            // remove double spaces
-            // text = text.stringByReplacingOccurrencesOfString("  ", withString: " ")
+            let randChar = Character.randomInstance()
+            text = text + String(randChar)
         }
         return text
     }
@@ -241,7 +227,32 @@ testStr = String.randomInstance()
 
 var testStr2 = String.randomInstanceWithCustomLength(100)
 
+var arrOfStrs = String.makeArrayOfRandomInstances(10)
 
+//------------------
+// Custom structure
+//------------------
+enum Genre: Int {
+    case Biography, Detective, Documentary, Drama, Educational, Fantasy, Horror, Novel, Poetry, Scifi, Western, Other
+}
 
+struct Book: CustomStringConvertible {
+    let title: String
+    let author: String
+    let genre: Genre
+    
+    var description: String {
+        return "\"\(title)\"" + " written by " + author
+    }
+}
 
+extension Book: RandomInstanceProtocol {
+    static func randomInstance() -> Book {
+        return Book(title: String.randomInstanceWithCustomLength(30), author: String.randomInstance(), genre: Genre(rawValue: Int.randomInstanceWithCustomBounds(customLowerBound: 0, customUpperBound: Genre.Other.rawValue))!)
+    }
+}
+
+let randBook = Book.randomInstance()
+
+var arrOfRandBooks = Book.makeArrayOfRandomInstances(5)
 
